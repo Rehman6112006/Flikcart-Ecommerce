@@ -42,8 +42,8 @@ app.get('/api/health', (_req, res) => {
 })
 
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error('Unhandled error:', err)
-  res.status(500).json({ message: 'Internal server error' })
+  console.error('Unhandled error:', err?.stack || err?.message || err)
+  res.status(500).json({ message: 'Internal server error', detail: err?.message || 'Unknown' })
 })
 
 const MONGODB_URI = process.env.MONGODB_URI

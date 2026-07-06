@@ -118,8 +118,9 @@ router.post('/riders/forgot-password', async (req: Request, res: Response) => {
 
     res.json({ message: 'If the email exists, a reset link has been sent' })
   } catch (error) {
+    const msg = error instanceof Error ? error.message : 'Unknown error'
     console.error('Forgot password error:', error)
-    res.status(500).json({ message: 'Error processing request' })
+    res.status(500).json({ message: 'Error processing request', detail: msg })
   }
 })
 

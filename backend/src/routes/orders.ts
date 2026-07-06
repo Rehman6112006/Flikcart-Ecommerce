@@ -515,9 +515,10 @@ router.post('/create-payment-intent', async (req: Request, res: Response) => {
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
     })
-  } catch (error: any) {
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : 'Unknown error'
     console.error('Error creating payment intent:', error)
-    res.status(500).json({ message: 'Error creating payment intent', error: error.message })
+    res.status(500).json({ message: 'Error creating payment intent', error: msg })
   }
 })
 
