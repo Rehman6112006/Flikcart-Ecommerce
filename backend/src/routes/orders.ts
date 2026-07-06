@@ -522,6 +522,15 @@ router.post('/create-payment-intent', async (req: Request, res: Response) => {
   }
 })
 
+router.get('/test-stripe', async (_req: Request, res: Response) => {
+  try {
+    const bal = await stripe.balance.retrieve()
+    res.json({ ok: true, balance: bal.available })
+  } catch (e: any) {
+    res.json({ ok: false, error: e.message })
+  }
+})
+
 router.post('/update-payment-status', async (req: Request, res: Response) => {
   try {
     const { orderId, paymentIntentId, status } = req.body
