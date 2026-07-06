@@ -23,7 +23,7 @@ import { Notification } from './models/Notification'
 import { Banner } from './models/Banner'
 import { Return } from './models/Return'
 
-const stripeKey = process.env.STRIPE_SECRET_KEY
+const stripeKey = (process.env.STRIPE_SECRET_KEY || '').trim()
 if (!stripeKey) {
   console.error('ERROR: STRIPE_SECRET_KEY is not set in .env file!')
   process.exit(1)
