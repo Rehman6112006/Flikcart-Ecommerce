@@ -43,11 +43,10 @@ const EMAIL_PASS = process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/\s+/
 let nodemailerTransporter: nodemailer.Transporter | null = null
 if (EMAIL_USER && EMAIL_PASS) {
   nodemailerTransporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: { user: EMAIL_USER, pass: EMAIL_PASS },
-    connectionTimeout: 8000,
-    greetingTimeout: 8000,
-    socketTimeout: 8000,
   })
 }
 
