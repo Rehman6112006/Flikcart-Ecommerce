@@ -495,9 +495,12 @@ router.post('/create-payment-intent', async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Minimum amount must be PKR 100' })
     }
 
+    const pkrToUsd = 280
+    const usdCents = Math.round((amount / pkrToUsd) * 100)
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100),
-      currency: 'pkr',
+      amount: usdCents,
+      currency: 'usd',
       metadata: {
         orderId: orderId || '',
         integration_check: 'accept_a_payment',
