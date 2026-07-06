@@ -53,32 +53,32 @@ if (!MONGODB_URI) {
 }
 
 const seedAdminUser = async () => {
+  const hashedPassword = await bcrypt.hash('admin123', 10)
   const adminExists = await User.findOne({ email: 'abdulrehman6112006@gmail.com' })
   if (!adminExists) {
-    const hashedPassword = await bcrypt.hash('admin123', 10)
     await User.create({
       name: 'Admin',
       email: 'abdulrehman6112006@gmail.com',
       password: hashedPassword,
       isAdmin: true,
     })
+    console.log('Default admin created: abdulrehman6112006@gmail.com / admin123')
+  } else {
+    adminExists.password = hashedPassword
+    adminExists.isAdmin = true
+    await adminExists.save()
+    console.log('Admin password reset to default')
+  }
+  const adminInAdmin = await Admin.findOne({ email: 'abdulrehman6112006@gmail.com' })
+  if (!adminInAdmin) {
     await Admin.create({
       name: 'Admin',
       email: 'abdulrehman6112006@gmail.com',
       password: hashedPassword,
     })
-    console.log('Default admin created: abdulrehman6112006@gmail.com / admin123')
-  } else if (!adminExists.isAdmin) {
-    await User.findByIdAndUpdate(adminExists._id, { isAdmin: true })
-    const adminInAdmin = await Admin.findOne({ email: 'abdulrehman6112006@gmail.com' })
-    if (!adminInAdmin) {
-      await Admin.create({
-        name: adminExists.name,
-        email: adminExists.email,
-        password: adminExists.password,
-      })
-    }
-    console.log('Existing user promoted to admin')
+  } else {
+    adminInAdmin.password = hashedPassword
+    await adminInAdmin.save()
   }
 }
 
