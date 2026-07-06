@@ -57,29 +57,26 @@ const FROM_NAME = process.env.EMAIL_FROM_NAME || 'FlikCart'
 const sendEmail = async (to: string, subject: string, html: string) => {
   let lastError: Error | null = null
 
-  if (resendClient) {
-    try {
-      await resendClient.emails.send({
-        from: `${FROM_NAME} <onboarding@resend.dev>`,
-        to, subject, html,
-      })
-      if (nodemailerTransporter) {
-        nodemailerTransporter.sendMail({ from: `"${FROM_NAME}" <${FROM_EMAIL}>`, to, subject, html }).catch(() => {})
-      }
-      return
-    } catch (err) {
-      lastError = err instanceof Error ? err : new Error(String(err))
-      console.warn('Resend failed, trying nodemailer fallback:', err)
-    }
-  }
-
   if (nodemailerTransporter) {
     try {
       await nodemailerTransporter.sendMail({ from: `"${FROM_NAME}" <${FROM_EMAIL}>`, to, subject, html })
       return
     } catch (err) {
       lastError = err instanceof Error ? err : new Error(String(err))
-      console.error('Nodemailer also failed:', err)
+      console.warn('Nodemailer failed, trying Resend:', err)
+    }
+  }
+
+  if (resendClient) {
+    try {
+      await resendClient.emails.send({
+        from: `${FROM_NAME} <onboarding@resend.dev>`,
+        to, subject, html,
+      })
+      return
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err))
+      console.error('Resend also failed:', err)
     }
   }
 
