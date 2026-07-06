@@ -45,9 +45,9 @@ if (EMAIL_USER && EMAIL_PASS) {
   nodemailerTransporter = nodemailer.createTransport({
     service: 'gmail',
     auth: { user: EMAIL_USER, pass: EMAIL_PASS },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
+    connectionTimeout: 8000,
+    greetingTimeout: 8000,
+    socketTimeout: 8000,
   })
 }
 
@@ -63,7 +63,7 @@ const sendEmail = async (to: string, subject: string, html: string) => {
       return
     } catch (err) {
       lastError = err instanceof Error ? err : new Error(String(err))
-      console.warn('Nodemailer failed, trying Resend:', err)
+      console.warn('Nodemailer failed:', err)
     }
   }
 
@@ -80,7 +80,7 @@ const sendEmail = async (to: string, subject: string, html: string) => {
     }
   }
 
-  throw lastError || new Error('No email provider configured. Set RESEND_API_KEY or EMAIL_USER/EMAIL_PASS in .env')
+  throw lastError || new Error('Email not configured. Set EMAIL_USER & EMAIL_PASS (Gmail) or RESEND_API_KEY')
 }
 
 const sendOrderStatusEmail = async (order: any, newStatus: string) => {
