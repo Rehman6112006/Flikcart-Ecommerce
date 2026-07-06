@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+const API_BASE_URL = 'https://flikcart-ecommerce-production.up.railway.app'
 
 export const API = {
   base: API_BASE_URL,
